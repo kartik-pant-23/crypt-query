@@ -1,5 +1,6 @@
 import 'package:crypt_query/models/Currency.dart';
 import 'package:crypt_query/models/Settings.dart';
+import 'package:crypt_query/screens/DetailsScreen.dart';
 import 'package:crypt_query/screens/SettingsScreen.dart';
 import 'package:crypt_query/services/currencies.dart';
 import 'package:flutter/material.dart';
@@ -149,45 +150,60 @@ class _CurrenciesListState extends State<CurrenciesList> {
         ));
 
     Widget _currencyItem(Currency item) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            item.logoUrl.endsWith(".svg")
-                ? SvgPicture.network(item.logoUrl, height: 40, width: 40)
-                : Image.network(item.logoUrl, height: 40, width: 40),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("${item.name}",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(item.symbol),
-                      Expanded(child: Container()),
-                      Text(item.priceDelta ?? "-",
-                          style: TextStyle(
-                              color: (item.priceDelta ?? "-").startsWith("-")
-                                  ? Colors.red
-                                  : Colors.green,
-                              fontWeight: FontWeight.bold)),
-                      Expanded(child: Container()),
-                      Text(item.price ?? "-",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffd9e2ec)))
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(context, PageRouteBuilder(
+            pageBuilder: (ctx, anim1, anim2) => DetailsScreen(currency: item),
+            transitionsBuilder: (ctx, anim1, anim2, child) {
+              return SlideTransition(
+                  position: anim1.drive(Tween(
+                      begin: Offset(1.0, 0.0),
+                      end: Offset.zero
+                  ).chain(CurveTween(curve: Curves.easeOut))),
+                  child: child
+              );
+            }));
+          },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              item.logoUrl.endsWith(".svg")
+                  ? SvgPicture.network(item.logoUrl, height: 40, width: 40)
+                  : Image.network(item.logoUrl, height: 40, width: 40),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${item.name}",
+                        style: TextStyle(fontWeight: FontWeight.bold, decoration: TextDecoration.underline)),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(item.symbol),
+                        Expanded(child: Container()),
+                        Text(item.priceDelta ?? "-",
+                            style: TextStyle(
+                                color: (item.priceDelta ?? "-").startsWith("-")
+                                    ? Colors.red
+                                    : Colors.green,
+                                fontWeight: FontWeight.bold)),
+                        Expanded(child: Container()),
+                        Text(item.price ?? "-",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xffd9e2ec)))
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       );
     }

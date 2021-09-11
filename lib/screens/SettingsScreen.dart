@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text("Settings"),
         titleSpacing: 0.0,
-        backgroundColor: Color(0xff253b43),
+        backgroundColor: Color(0xff243b53),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
